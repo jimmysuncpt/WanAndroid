@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.jimmysun.ultrarecyclerview.BannerView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/banner_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    app:alignGravity="center"
+    app:indicatorDefaultColor="@color/grey01"
+    app:indicatorDefaultWidth="5dp"
+    app:indicatorGravity="bottom|right"
+    app:indicatorRightMargin="10dp"
+    app:indicatorSelectedColor="@color/colorPrimary"
+    app:indicatorSelectedWidth="10dp"
+    app:infiniteLoop="true" />
