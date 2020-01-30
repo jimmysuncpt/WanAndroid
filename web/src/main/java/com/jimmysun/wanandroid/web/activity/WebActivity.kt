@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebSettings
+import androidx.core.text.HtmlCompat
 import androidx.core.view.isVisible
 import com.jimmysun.wanandroid.base.activity.BaseActivity
 import com.jimmysun.wanandroid.base.util.toast
@@ -35,6 +36,9 @@ class WebActivity : BaseActivity(), WebViewClientListener, WebChromeClientListen
         }
         if (TextUtils.isEmpty(url)) {
             return
+        }
+        if (!TextUtils.isEmpty(title)) {
+            title_bar.setTitle(HtmlCompat.fromHtml(title!!, 0))
         }
         web_view.apply {
             loadUrl(this@WebActivity.url)
@@ -83,13 +87,9 @@ class WebActivity : BaseActivity(), WebViewClientListener, WebChromeClientListen
     }
 
     override fun onReceivedTitle(title: String?) {
-        title_bar.setTitle(
-            if (!TextUtils.isEmpty(this.title)) {
-                this.title!!
-            } else if (!TextUtils.isEmpty(title)) {
-                title!!
-            } else ""
-        )
+        if (TextUtils.isEmpty(this.title)) {
+            title_bar.setTitle(HtmlCompat.fromHtml(title ?: "网页", 0))
+        }
     }
 
     override fun onBackPressed() {
