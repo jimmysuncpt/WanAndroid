@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="160dp"
+    android:background="@drawable/bg_dialog_web_more"
+    android:orientation="horizontal"
+    android:paddingTop="20dp">
+
+    <ImageView
+        android:id="@+id/iv_reload"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_web_more_item"
+        android:padding="10dp"
+        android:src="@drawable/ic_web_reload"
+        app:layout_constraintLeft_toLeftOf="@id/group_reload"
+        app:layout_constraintRight_toRightOf="@id/group_reload"
+        app:layout_constraintTop_toTopOf="@id/group_reload" />
+
+    <TextView
+        android:id="@+id/tv_reload"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="@string/refresh_page"
+        android:textColor="@color/black04"
+        android:textSize="12sp"
+        app:layout_constraintLeft_toLeftOf="@id/iv_reload"
+        app:layout_constraintRight_toRightOf="@id/iv_reload"
+        app:layout_constraintTop_toBottomOf="@id/iv_reload" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/group_reload"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="iv_reload,tv_reload"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/group_copy" />
+
+    <ImageView
+        android:id="@+id/iv_copy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_web_more_item"
+        android:padding="10dp"
+        android:src="@drawable/ic_web_link"
+        app:layout_constraintLeft_toLeftOf="@id/group_copy"
+        app:layout_constraintRight_toRightOf="@id/group_copy"
+        app:layout_constraintTop_toTopOf="@id/group_copy" />
+
+    <TextView
+        android:id="@+id/tv_copy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="@string/copy_link"
+        android:textColor="@color/black04"
+        android:textSize="12sp"
+        app:layout_constraintLeft_toLeftOf="@id/iv_copy"
+        app:layout_constraintRight_toRightOf="@id/iv_copy"
+        app:layout_constraintTop_toBottomOf="@id/iv_copy" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/group_copy"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="iv_copy,tv_copy"
+        app:layout_constraintLeft_toRightOf="@id/group_reload"
+        app:layout_constraintRight_toLeftOf="@id/group_browser" />
+
+    <ImageView
+        android:id="@+id/iv_browser"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_web_more_item"
+        android:padding="10dp"
+        android:src="@drawable/ic_web_earth"
+        app:layout_constraintLeft_toLeftOf="@id/group_browser"
+        app:layout_constraintRight_toRightOf="@id/group_browser"
+        app:layout_constraintTop_toTopOf="@id/group_browser" />
+
+    <TextView
+        android:id="@+id/tv_browser"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="@string/open_with_browser"
+        android:textColor="@color/black04"
+        android:textSize="12sp"
+        app:layout_constraintLeft_toLeftOf="@id/iv_browser"
+        app:layout_constraintRight_toRightOf="@id/iv_browser"
+        app:layout_constraintTop_toBottomOf="@id/iv_browser" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/group_browser"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="iv_copy,tv_copy"
+        app:layout_constraintLeft_toRightOf="@id/group_copy"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <Button
+        android:id="@+id/btn_cancel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/white01"
+        android:padding="12dp"
+        android:text="@string/cancel"
+        android:textColor="@color/black02"
+        android:textSize="16sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

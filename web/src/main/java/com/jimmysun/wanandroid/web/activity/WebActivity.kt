@@ -1,6 +1,11 @@
 package com.jimmysun.wanandroid.web.activity
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
@@ -8,39 +13,75 @@ import android.view.ViewGroup
 import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebSettings
+import android.webkit.WebView
 import androidx.core.text.HtmlCompat
 import androidx.core.view.isVisible
 import com.jimmysun.wanandroid.base.activity.BaseActivity
 import com.jimmysun.wanandroid.base.util.toast
 import com.jimmysun.wanandroid.web.*
+import com.jimmysun.wanandroid.web.widget.WebBottomDialog
 import kotlinx.android.synthetic.main.activity_web.*
 
 class WebActivity : BaseActivity(), WebViewClientListener, WebChromeClientListener {
     companion object {
         const val EXTRA_URL = "url"
-        const val EXTRA_TITLE = "title"
     }
 
     private var url: String? = ""
-    private var title: String? = ""
+
+    private lateinit var webView: WebView
+    private var currentUrl: String? = ""
+
+    private val bottomDialog by lazy {
+        WebBottomDialog(this).apply {
+            setOnReloadClickListener {
+                webView.reload()
+                dismiss()
+            }
+            setOnCopyClickListener {
+                val clipboardManager =
+                    getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                val clipData = ClipData.newPlainText("WanAndroid", currentUrl)
+                clipboardManager.setPrimaryClip(clipData)
+                toast("复制成功")
+                dismiss()
+            }
+            setOnBrowserClickListener {
+                val uri = Uri.parse(currentUrl)
+                startActivity(Intent(Intent.ACTION_VIEW, uri))
+                dismiss()
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_web)
-        title_bar.setOnBackClickListener {
-            onBackPressed()
-        }
         intent.run {
             url = intent.getStringExtra(EXTRA_URL)
-            title = intent.getStringExtra(EXTRA_TITLE)
+            currentUrl = url
         }
         if (TextUtils.isEmpty(url)) {
             return
         }
-        if (!TextUtils.isEmpty(title)) {
-            title_bar.setTitle(HtmlCompat.fromHtml(title!!, 0))
+        initTitleBar()
+        initWebView()
+    }
+
+    private fun initTitleBar() {
+        title_bar.apply {
+            setOnBackClickListener {
+                onBackPressed()
+            }
+            setMoreVisible(true)
+            setOnMoreClickListener {
+                bottomDialog.show()
+            }
         }
-        web_view.apply {
+    }
+
+    private fun initWebView() {
+        webView = web_view.apply {
             loadUrl(this@WebActivity.url)
             settings.apply {
                 useWideViewPort = true // 将图片调整到适合 WebView 的大小
@@ -62,6 +103,7 @@ class WebActivity : BaseActivity(), WebViewClientListener, WebChromeClientListen
     }
 
     override fun onPageStarted(url: String?, favicon: Bitmap?) {
+        currentUrl = url
         progress_bar.isVisible = true
     }
 
@@ -87,21 +129,19 @@ class WebActivity : BaseActivity(), WebViewClientListener, WebChromeClientListen
     }
 
     override fun onReceivedTitle(title: String?) {
-        if (TextUtils.isEmpty(this.title)) {
-            title_bar.setTitle(HtmlCompat.fromHtml(title ?: "网页", 0))
-        }
+        title_bar.setTitle(HtmlCompat.fromHtml(title ?: "网页", 0))
     }
 
     override fun onBackPressed() {
-        if (web_view.canGoBack()) {
-            web_view.goBack()
+        if (webView.canGoBack()) {
+            webView.goBack()
         } else {
             super.onBackPressed()
         }
     }
 
     override fun onDestroy() {
-        web_view.run {
+        webView.run {
             loadDataWithBaseURL(null, "", "text/html", "utf-8", null)
             clearHistory()
             (parent as ViewGroup).removeView(this)

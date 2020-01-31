@@ -44,4 +44,10 @@ class TitleBar @JvmOverloads constructor(
             View.INVISIBLE
         }
     }
+
+    fun setOnMoreClickListener(onClick: (View) -> Unit) {
+        iv_more.setOnClickListener {
+            onClick(it)
+        }
+    }
 }

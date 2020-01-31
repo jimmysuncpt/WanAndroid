@@ -3,4 +3,14 @@
     <declare-styleable name="TitleBar">
         <attr name="moreVisible" format="boolean" />
     </declare-styleable>
+
+    <style name="BaseDialog" parent="@android:style/Theme.Dialog">
+        <!-- 背景透明 -->
+        <item name="android:windowBackground">@color/transparent</item>
+    </style>
+
+    <style name="BottomDialogAnim">
+        <item name="android:windowEnterAnimation">@anim/bottom_dialog_enter</item>
+        <item name="android:windowExitAnimation">@anim/bottom_dialog_exit</item>
+    </style>
 </resources>

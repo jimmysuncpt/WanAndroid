@@ -1,0 +1,5 @@
+<resources>
+    <string name="refresh_page">刷新页面</string>
+    <string name="copy_link">复制链接</string>
+    <string name="open_with_browser">浏览器打开</string>
+</resources>

@@ -5,14 +5,29 @@
     <color name="colorAccent">#0084FF</color>
 
     <color name="black01">#000000</color>
+    <color name="black01_70">#B3000000</color>
     <color name="black02">#1A1A1A</color>
     <color name="black03">#444444</color>
-    <color name="black01_70">#B3000000</color>
+    <color name="black04">#646464</color>
+    <color name="black05">#808080</color>
+    <color name="black06">#999999</color>
     <color name="grey01">#CCCCCC</color>
-    <color name="grey02">#EBEBEB</color>
-    <color name="transparent">#00000000</color>
+    <color name="grey02">#D3D3D3</color>
+    <color name="grey03">#EBEBEB</color>
+    <color name="white02">#F6F6F6</color>
     <color name="white01">#FFFFFF</color>
+    <color name="transparent">#00000000</color>
     <color name="red01">#FF3366</color>
+    <color name="red02">#D92155</color>
+    <color name="red03">#FF3B30</color>
+    <color name="red04">#B7302D</color>
     <color name="yellow01">#FFB549</color>
+    <color name="blue01">#0084FF</color>
+    <color name="blue02">#3A76D0</color>
+    <color name="blue03">#03A9F4</color>
+    <color name="blue04">#80C1FF</color>
+    <color name="blue05">#8590A6</color>
+    <color name="blue06">#606A80</color>
+    <color name="blue07">#175199</color>
     <color name="green01">#67C23A</color>
 </resources>

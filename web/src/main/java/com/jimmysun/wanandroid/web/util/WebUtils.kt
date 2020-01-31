@@ -12,20 +12,19 @@ import com.jimmysun.wanandroid.web.activity.WebActivity
  * @author SunQiang
  * @since 2020-01-20
  */
-fun openUrl(context: Context?, url: String?, title: String? = "") {
+fun openUrl(context: Context?, url: String?) {
     if (context == null || TextUtils.isEmpty(url)) {
         return
     }
     val intent = Intent(context, WebActivity::class.java)
     intent.putExtra(WebActivity.EXTRA_URL, url)
-    intent.putExtra(WebActivity.EXTRA_TITLE, title)
     context.startActivity(intent)
 }
 
-fun Activity.openUrl(url: String?, title: String? = "") {
-    openUrl(this, url, title)
+fun Activity.openUrl(url: String?) {
+    openUrl(this, url)
 }
 
-fun Fragment.openUrl(url: String?, title: String? = "") {
-    openUrl(context, url, title)
+fun Fragment.openUrl(url: String?) {
+    openUrl(context, url)
 }

@@ -41,7 +41,7 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val homeViewModel = ViewModelProviders.of(this).get(HomeViewModel::class.java)
-        homeViewModel.dataListLiveData.observe(this, Observer {
+        homeViewModel.dataListLiveData.observe(viewLifecycleOwner, Observer {
             it?.run {
                 homeAdapter.data.remove(loadMoreItem)
                 homeAdapter.notifyItemRemoved(homeAdapter.itemCount)
@@ -61,7 +61,7 @@ class HomeFragment : Fragment() {
                         override fun onCreate(viewHolder: HomeBannerViewHolder) {
                             viewHolder.setOnClickListener(object : OnBannerClickListener {
                                 override fun onClick(data: Banner.Data) {
-                                    openUrl(data.url, data.title)
+                                    openUrl(data.url)
                                 }
                             })
                         }
@@ -71,7 +71,7 @@ class HomeFragment : Fragment() {
                     object : OnHolderCreateListener<ArticleViewHolder> {
                         override fun onCreate(viewHolder: ArticleViewHolder) {
                             viewHolder.setOnItemClickListener { data, _ ->
-                                openUrl(data.link, data.title)
+                                openUrl(data.link)
                             }
                         }
                     })
