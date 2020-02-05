@@ -2,6 +2,5 @@
     <string name="refresh_page">刷新页面</string>
     <string name="copy_link">复制链接</string>
     <string name="open_with_browser">浏览器打开</string>
-    <string name="click_to_refresh">点击刷新</string>
     <string name="guide_browser">点击右上角选择浏览器打开</string>
 </resources>

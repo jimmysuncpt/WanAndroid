@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.jimmysun.wanandroid.R
 import com.jimmysun.wanandroid.adapter.OnBannerClickListener
 import com.jimmysun.wanandroid.api.model.Banner
+import com.jimmysun.wanandroid.base.ViewModelListener
 import com.jimmysun.wanandroid.base.recyclerview.OnHolderCreateListener
 import com.jimmysun.wanandroid.base.recyclerview.SuperAdapter
 import com.jimmysun.wanandroid.viewholder.ArticleViewHolder
@@ -28,6 +30,7 @@ import kotlinx.android.synthetic.main.fragment_home.*
  * @since 2020-01-09
  */
 class HomeFragment : Fragment() {
+    private lateinit var homeViewModel: HomeViewModel
     private lateinit var homeAdapter: SuperAdapter
     private val loadMoreItem = LoadMoreItem()
 
@@ -40,18 +43,11 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val homeViewModel = ViewModelProviders.of(this).get(HomeViewModel::class.java)
-        homeViewModel.dataListLiveData.observe(viewLifecycleOwner, Observer {
-            it?.run {
-                homeAdapter.data.remove(loadMoreItem)
-                homeAdapter.notifyItemRemoved(homeAdapter.itemCount)
-                if (refresh_layout.isRefreshing) {
-                    homeAdapter.init()
-                    refresh_layout.isRefreshing = false
-                }
-                homeAdapter.loadMore(this)
-            }
-        })
+        initView()
+        initViewModel()
+    }
+
+    private fun initView() {
         recycler_view.apply {
             layoutManager = LinearLayoutManager(context)
             homeAdapter = SuperAdapter.Builder()
@@ -95,5 +91,35 @@ class HomeFragment : Fragment() {
                 homeViewModel.loadData(0)
             }
         }
+        btn_reload.setOnClickListener {
+            refresh_layout.isRefreshing = true
+            homeViewModel.loadData(0)
+        }
+    }
+
+    private fun initViewModel() {
+        homeViewModel = ViewModelProviders.of(this).get(HomeViewModel::class.java).apply {
+            listener = object : ViewModelListener {
+                override fun onLoadFailed() {
+                    refresh_layout.isRefreshing = false
+                    layout_net_error.isVisible = true
+                }
+            }
+            loadData(0)
+        }
+        homeViewModel.dataListLiveData.observe(viewLifecycleOwner, Observer {
+            it?.run {
+                if (layout_net_error.isVisible) {
+                    layout_net_error.isVisible = false
+                }
+                homeAdapter.data.remove(loadMoreItem)
+                homeAdapter.notifyItemRemoved(homeAdapter.itemCount)
+                if (refresh_layout.isRefreshing) {
+                    homeAdapter.init()
+                    refresh_layout.isRefreshing = false
+                }
+                homeAdapter.loadMore(this)
+            }
+        })
     }
 }

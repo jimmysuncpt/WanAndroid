@@ -1,4 +1,6 @@
 <resources>
     <string name="loading">正在加载…</string>
     <string name="cancel">取消</string>
+    <string name="net_error">哎呀！网络出问题了</string>
+    <string name="click_to_refresh">点击刷新</string>
 </resources>
