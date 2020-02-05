@@ -12,7 +12,8 @@
         android:layout_height="48dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:moreVisible="true" />
 
     <WebView
         android:id="@+id/web_view"
@@ -33,4 +34,74 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/title_bar" />
+
+    <ImageView
+        android:id="@+id/iv_reload"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_web_reload_grey"
+        app:layout_constraintBottom_toBottomOf="@id/group_reload"
+        app:layout_constraintLeft_toLeftOf="@id/group_reload"
+        app:layout_constraintRight_toRightOf="@id/group_reload"
+        app:layout_constraintTop_toTopOf="@id/group_reload" />
+
+    <TextView
+        android:id="@+id/tv_reload"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="@string/click_to_refresh"
+        android:textColor="@color/grey01"
+        android:textSize="14sp"
+        app:layout_constraintLeft_toLeftOf="@id/group_reload"
+        app:layout_constraintRight_toRightOf="@id/group_reload"
+        app:layout_constraintTop_toBottomOf="@id/iv_reload" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/group_reload"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:constraint_referenced_ids="iv_reload,tv_reload"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/group_browser_guide"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/black01_50"
+        android:focusable="true"
+        android:clickable="true"
+        android:visibility="gone"
+        app:constraint_referenced_ids="iv_arrow,tv_browser"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/title_bar" />
+
+    <ImageView
+        android:id="@+id/iv_arrow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="20dp"
+        android:src="@drawable/right_top_arrow"
+        app:layout_constraintRight_toRightOf="@id/group_browser_guide"
+        app:layout_constraintTop_toTopOf="@id/group_browser_guide" />
+
+    <TextView
+        android:id="@+id/tv_browser"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="40dp"
+        android:text="@string/guide_browser"
+        android:textColor="@color/white01"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintRight_toRightOf="@id/iv_arrow"
+        app:layout_constraintTop_toBottomOf="@id/iv_arrow" />
 </androidx.constraintlayout.widget.ConstraintLayout>

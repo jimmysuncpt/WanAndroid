@@ -10,17 +10,18 @@ import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.ViewGroup
-import android.webkit.WebResourceError
-import android.webkit.WebResourceRequest
 import android.webkit.WebSettings
 import android.webkit.WebView
 import androidx.core.text.HtmlCompat
 import androidx.core.view.isVisible
 import com.jimmysun.wanandroid.base.activity.BaseActivity
+import com.jimmysun.wanandroid.base.net.SCHEME_HTTP
+import com.jimmysun.wanandroid.base.net.SCHEME_HTTPS
 import com.jimmysun.wanandroid.base.util.toast
 import com.jimmysun.wanandroid.web.*
 import com.jimmysun.wanandroid.web.widget.WebBottomDialog
 import kotlinx.android.synthetic.main.activity_web.*
+
 
 class WebActivity : BaseActivity(), WebViewClientListener, WebChromeClientListener {
     companion object {
@@ -48,7 +49,9 @@ class WebActivity : BaseActivity(), WebViewClientListener, WebChromeClientListen
             }
             setOnBrowserClickListener {
                 val uri = Uri.parse(currentUrl)
-                startActivity(Intent(Intent.ACTION_VIEW, uri))
+                startActivity(Intent(Intent.ACTION_VIEW, uri).apply {
+                    addCategory(Intent.CATEGORY_BROWSABLE)
+                })
                 dismiss()
             }
         }
@@ -59,13 +62,22 @@ class WebActivity : BaseActivity(), WebViewClientListener, WebChromeClientListen
         setContentView(R.layout.activity_web)
         intent.run {
             url = intent.getStringExtra(EXTRA_URL)
+            if (TextUtils.isEmpty(url)) {
+                return@onCreate
+            }
+            val uri = Uri.parse(url)
+            if (uri.scheme == SCHEME_HTTP) {
+                url = uri.buildUpon().scheme(SCHEME_HTTPS).toString()
+            }
             currentUrl = url
-        }
-        if (TextUtils.isEmpty(url)) {
-            return
         }
         initTitleBar()
         initWebView()
+        iv_reload.setOnClickListener {
+            group_reload.isVisible = false
+            webView.isVisible = true
+            webView.reload()
+        }
     }
 
     private fun initTitleBar() {
@@ -73,7 +85,6 @@ class WebActivity : BaseActivity(), WebViewClientListener, WebChromeClientListen
             setOnBackClickListener {
                 onBackPressed()
             }
-            setMoreVisible(true)
             setOnMoreClickListener {
                 bottomDialog.show()
             }
@@ -82,7 +93,6 @@ class WebActivity : BaseActivity(), WebViewClientListener, WebChromeClientListen
 
     private fun initWebView() {
         webView = web_view.apply {
-            loadUrl(this@WebActivity.url)
             settings.apply {
                 useWideViewPort = true // 将图片调整到适合 WebView 的大小
                 loadWithOverviewMode = true // 缩放至屏幕的大小
@@ -99,6 +109,10 @@ class WebActivity : BaseActivity(), WebViewClientListener, WebChromeClientListen
             }
             webViewClient = WanWebViewClient(this@WebActivity)
             webChromeClient = WanWebChromeClient(this@WebActivity)
+            setDownloadListener { _, _, _, _, _ ->
+                group_browser_guide.isVisible = true
+            }
+            loadUrl(this@WebActivity.url)
         }
     }
 
@@ -111,8 +125,14 @@ class WebActivity : BaseActivity(), WebViewClientListener, WebChromeClientListen
         progress_bar.isVisible = false
     }
 
-    override fun onReceivedError(request: WebResourceRequest?, error: WebResourceError?) {
-        toast("加载出错")
+    override fun onReceivedError() {
+        title_bar.setTitle(ERROR_PAGE_MSG)
+        webView.isVisible = false
+        group_reload.isVisible = true
+    }
+
+    override fun onLoadUrlError() {
+        group_browser_guide.isVisible = true
     }
 
     override fun onProgressChanged(progress: Int) {
@@ -133,10 +153,13 @@ class WebActivity : BaseActivity(), WebViewClientListener, WebChromeClientListen
     }
 
     override fun onBackPressed() {
-        if (webView.canGoBack()) {
-            webView.goBack()
-        } else {
-            super.onBackPressed()
+        if (group_reload.isVisible) {
+            group_reload.isVisible = false
+        }
+        when {
+            group_browser_guide.isVisible -> group_browser_guide.isVisible = false
+            webView.canGoBack() -> webView.goBack()
+            else -> super.onBackPressed()
         }
     }
 

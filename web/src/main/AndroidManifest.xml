@@ -3,7 +3,9 @@
     package="com.jimmysun.wanandroid.web">
 
     <application>
-        <activity android:name=".activity.WebActivity"></activity>
+        <activity
+            android:name=".activity.WebActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

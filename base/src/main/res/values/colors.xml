@@ -6,6 +6,7 @@
 
     <color name="black01">#000000</color>
     <color name="black01_70">#B3000000</color>
+    <color name="black01_50">#80000000</color>
     <color name="black02">#1A1A1A</color>
     <color name="black03">#444444</color>
     <color name="black04">#646464</color>

@@ -12,8 +12,6 @@ import java.net.Proxy
  * @since 2020-01-08
  */
 object Net {
-    const val NET_ERROR = "似乎出了点问题~"
-
     private const val BASE_URL = "https://www.wanandroid.com"
 
     private val retrofit: Retrofit by lazy {

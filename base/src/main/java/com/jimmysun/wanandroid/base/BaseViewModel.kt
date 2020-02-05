@@ -3,7 +3,7 @@ package com.jimmysun.wanandroid.base
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jimmysun.wanandroid.base.ktx.logE
-import com.jimmysun.wanandroid.base.net.Net
+import com.jimmysun.wanandroid.base.net.NET_ERROR
 import com.jimmysun.wanandroid.base.util.toast
 import kotlinx.coroutines.*
 
@@ -20,7 +20,7 @@ open class BaseViewModel : ViewModel(), CoroutineScope by MainScope() {
             try {
                 doSomething()
             } catch (e: Exception) {
-                toast(Net.NET_ERROR)
+                toast(NET_ERROR)
                 logE(e.message)
             }
         }
