@@ -11,7 +11,6 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.view.ViewGroup
 import android.webkit.WebSettings
-import android.webkit.WebView
 import androidx.core.text.HtmlCompat
 import androidx.core.view.isVisible
 import com.jimmysun.wanandroid.base.activity.BaseActivity
@@ -19,8 +18,8 @@ import com.jimmysun.wanandroid.base.net.SCHEME_HTTP
 import com.jimmysun.wanandroid.base.net.SCHEME_HTTPS
 import com.jimmysun.wanandroid.base.util.toast
 import com.jimmysun.wanandroid.web.*
+import com.jimmysun.wanandroid.web.databinding.ActivityWebBinding
 import com.jimmysun.wanandroid.web.widget.WebBottomDialog
-import kotlinx.android.synthetic.main.activity_web.*
 
 
 class WebActivity : BaseActivity(), WebViewClientListener, WebChromeClientListener {
@@ -30,13 +29,13 @@ class WebActivity : BaseActivity(), WebViewClientListener, WebChromeClientListen
 
     private var url: String? = ""
 
-    private lateinit var webView: WebView
+    private lateinit var viewBinding: ActivityWebBinding
     private var currentUrl: String? = ""
 
     private val bottomDialog by lazy {
         WebBottomDialog(this).apply {
             setOnReloadClickListener {
-                webView.reload()
+                viewBinding.webView.reload()
                 dismiss()
             }
             setOnCopyClickListener {
@@ -59,7 +58,8 @@ class WebActivity : BaseActivity(), WebViewClientListener, WebChromeClientListen
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_web)
+        viewBinding = ActivityWebBinding.inflate(layoutInflater)
+        setContentView(viewBinding.root)
         intent.run {
             url = intent.getStringExtra(EXTRA_URL)
             if (TextUtils.isEmpty(url)) {
@@ -73,15 +73,17 @@ class WebActivity : BaseActivity(), WebViewClientListener, WebChromeClientListen
         }
         initTitleBar()
         initWebView()
-        iv_reload.setOnClickListener {
-            group_reload.isVisible = false
-            webView.isVisible = true
-            webView.reload()
+        viewBinding.ivReload.setOnClickListener {
+            viewBinding.groupReload.isVisible = false
+            viewBinding.webView.run {
+                isVisible = true
+                reload()
+            }
         }
     }
 
     private fun initTitleBar() {
-        title_bar.apply {
+        viewBinding.titleBar.apply {
             setOnBackClickListener {
                 onBackPressed()
             }
@@ -92,7 +94,7 @@ class WebActivity : BaseActivity(), WebViewClientListener, WebChromeClientListen
     }
 
     private fun initWebView() {
-        webView = web_view.apply {
+        viewBinding.webView.apply {
             settings.apply {
                 useWideViewPort = true // 将图片调整到适合 WebView 的大小
                 loadWithOverviewMode = true // 缩放至屏幕的大小
@@ -110,7 +112,7 @@ class WebActivity : BaseActivity(), WebViewClientListener, WebChromeClientListen
             webViewClient = WanWebViewClient(this@WebActivity)
             webChromeClient = WanWebChromeClient(this@WebActivity)
             setDownloadListener { _, _, _, _, _ ->
-                group_browser_guide.isVisible = true
+                viewBinding.groupBrowserGuide.isVisible = true
             }
             loadUrl(this@WebActivity.url)
         }
@@ -118,25 +120,28 @@ class WebActivity : BaseActivity(), WebViewClientListener, WebChromeClientListen
 
     override fun onPageStarted(url: String?, favicon: Bitmap?) {
         currentUrl = url
-        progress_bar.isVisible = true
+        viewBinding.progressBar.isVisible = true
     }
 
     override fun onPageFinished(url: String?) {
-        progress_bar.isVisible = false
+        viewBinding.progressBar.isVisible = false
     }
 
     override fun onReceivedError() {
-        title_bar.setTitle(ERROR_PAGE_MSG)
-        webView.isVisible = false
-        group_reload.isVisible = true
+        viewBinding.run {
+            titleBar.setTitle(ERROR_PAGE_MSG)
+            webView.isVisible = false
+            groupReload.isVisible = true
+        }
+
     }
 
     override fun onLoadUrlError() {
-        group_browser_guide.isVisible = true
+        viewBinding.groupBrowserGuide.isVisible = true
     }
 
     override fun onProgressChanged(progress: Int) {
-        progress_bar.run {
+        viewBinding.progressBar.run {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 setProgress(progress, true)
             } else {
@@ -149,22 +154,24 @@ class WebActivity : BaseActivity(), WebViewClientListener, WebChromeClientListen
     }
 
     override fun onReceivedTitle(title: String?) {
-        title_bar.setTitle(HtmlCompat.fromHtml(title ?: "网页", 0))
+        viewBinding.titleBar.setTitle(HtmlCompat.fromHtml(title ?: "网页", 0))
     }
 
     override fun onBackPressed() {
-        if (group_reload.isVisible) {
-            group_reload.isVisible = false
-        }
-        when {
-            group_browser_guide.isVisible -> group_browser_guide.isVisible = false
-            webView.canGoBack() -> webView.goBack()
-            else -> super.onBackPressed()
+        viewBinding.run {
+            if (groupReload.isVisible) {
+                groupReload.isVisible = false
+            }
+            when {
+                groupBrowserGuide.isVisible -> groupBrowserGuide.isVisible = false
+                webView.canGoBack() -> webView.goBack()
+                else -> super.onBackPressed()
+            }
         }
     }
 
     override fun onDestroy() {
-        webView.run {
+        viewBinding.webView.run {
             loadDataWithBaseURL(null, "", "text/html", "utf-8", null)
             clearHistory()
             (parent as ViewGroup).removeView(this)
