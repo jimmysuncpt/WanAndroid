@@ -5,6 +5,7 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -16,6 +17,7 @@ import androidx.core.view.isVisible
 import com.jimmysun.wanandroid.base.activity.BaseActivity
 import com.jimmysun.wanandroid.base.net.SCHEME_HTTP
 import com.jimmysun.wanandroid.base.net.SCHEME_HTTPS
+import com.jimmysun.wanandroid.base.util.StatusBarUtils
 import com.jimmysun.wanandroid.base.util.toast
 import com.jimmysun.wanandroid.web.*
 import com.jimmysun.wanandroid.web.databinding.ActivityWebBinding
@@ -71,6 +73,7 @@ class WebActivity : BaseActivity(), WebViewClientListener, WebChromeClientListen
             }
             currentUrl = url
         }
+        StatusBarUtils.setColor(this, Color.WHITE)
         initTitleBar()
         initWebView()
         viewBinding.ivReload.setOnClickListener {
